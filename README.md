@@ -5,28 +5,33 @@
 vue-cli搭建的开发环境，localhost:8080,导致cookie获取不到，所以，用nginx反向代理将localhost:8080指到本地项目域名下
 
 ### nginx.conf
+server
 
-listen 80;
+{
 
-server_name   w.demo.com;
+     listen 80;
 
-root          /Users/zhangligang/code/demo/;
+     server_name   w.demo.com;
 
-index         index.html index.php;
+     root          /Users/zhangligang/code/demo/;
 
-location ^~ /test/2019/ {
+     index         index.html index.php;
 
-     proxy_pass http://localhost:8080;
+     location ^~ /test/2019/ {
+
+          proxy_pass http://localhost:8080;
+
+          proxy_redirect     off;
+
+          proxy_set_header   Host   $http_host;
+
+          proxy_set_header  X-Real-IP         $remote_addr;
+
+          proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+
+     }
      
-     proxy_redirect     off;
-     
-     proxy_set_header   Host   $http_host;
-     
-     proxy_set_header  X-Real-IP         $remote_addr;
-     
-     proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
-     
-}
+ }
 
 ### vue.config.js
 devServer: { 
